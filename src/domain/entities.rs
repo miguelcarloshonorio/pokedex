@@ -1,9 +1,11 @@
+use std::convert::TryFrom;
+
 pub struct PokemonNumber(u16);
 
-impl TryFrom<u16> form PokemonNumber {
+impl TryFrom<u16> for PokemonNumber {
     type Error = ();
 
-    fn try_from(n: u16) -> Result<Self, Self::Error>{
+    fn try_from(n: u16) -> Result<Self, Self::Error> {
         if n > 0 && n < 899 {
             Ok(Self(n))
         } else {
@@ -13,10 +15,10 @@ impl TryFrom<u16> form PokemonNumber {
 }
 
 impl From<PokemonNumber> for u16 {
-    fn from (n: PokemonNumber) -> {
+    fn from(n: PokemonNumber) -> u16 {
         n.0
     }
-} 
+}
 
 pub struct PokemonName(String);
 
@@ -27,27 +29,23 @@ impl TryFrom<String> for PokemonName {
         if n.is_empty() {
             Err(())
         } else {
-            Ok(Sefl(n))
+            Ok(Self(n))
         }
     }
-}
-
-enum PokemonType {
-    Electric,
 }
 
 pub struct PokemonTypes(Vec<PokemonType>);
 
 impl TryFrom<Vec<String>> for PokemonTypes {
     type Error = ();
-    
+
     fn try_from(ts: Vec<String>) -> Result<Self, Self::Error> {
-        if ts.is_empty(){
+        if ts.is_empty() {
             Err(())
         } else {
-            let mut pts = vec![]
+            let mut pts = vec![];
             for t in ts.iter() {
-                match PokemonType::try_from(String::from(t)){
+                match PokemonType::try_from(String::from(t)) {
                     Ok(pt) => pts.push(pt),
                     _ => return Err(()),
                 }
@@ -57,13 +55,17 @@ impl TryFrom<Vec<String>> for PokemonTypes {
     }
 }
 
+enum PokemonType {
+    Electric,
+}
+
 impl TryFrom<String> for PokemonType {
     type Error = ();
 
     fn try_from(t: String) -> Result<Self, Self::Error> {
         match t.as_str() {
-            "Eletric" => Ok(Self, Self::Electric),
-            _ => Err(())
+            "Electric" => Ok(Self::Electric),
+            _ => Err(()),
         }
     }
 }
