@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
 struct Response {
-    message: String,
+    number: u16,
 }
 
 #[derive(Deserialize)]
@@ -27,7 +27,7 @@ pub fn serve(repo: Arc<dyn Repository>, req: &rouille::Request) -> rouille::Resp
         _ => return rouille::Response::from(Status::BadRequest),
     };
     match create_pokemon::execute(repo, req) {
-        create_pokemon::Response::Ok(number) => rouille::Response::json(&Response { message: String::from("ok") }),
+        create_pokemon::Response::Ok(number) => rouille::Response::json(&Response { number }),
         create_pokemon::Response::BadRequest => rouille::Response::from(Status::BadRequest),
         create_pokemon::Response::Conflict => rouille::Response::from(Status::Conflict),
         create_pokemon::Response::Error => rouille::Response::from(Status::InternalServerError),

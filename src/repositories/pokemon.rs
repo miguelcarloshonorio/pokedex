@@ -2,7 +2,6 @@ use std::sync::Mutex;
 
 use crate::domain::entities::{Pokemon, PokemonName, PokemonNumber, PokemonTypes};
 
-
 pub trait Repository: Send + Sync {
     fn insert(&self, number: PokemonNumber, name: PokemonName, types: PokemonTypes) -> Insert;
 }
@@ -18,6 +17,13 @@ impl InMemoryRepository {
         Self {
             error: false,
             pokemons,
+        }
+    }
+
+    pub fn with_error(self) -> Self {
+        Self {
+            error: true,
+            ..self
         }
     }
 }

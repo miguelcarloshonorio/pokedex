@@ -1,6 +1,6 @@
-use crate::repositories::pokemon::Repository;
 use crate::domain::entities::{PokemonName, PokemonNumber, PokemonTypes};
-use crate::repositories::pokemon::{Insert};
+use crate::repositories::pokemon::Insert;
+use crate::repositories::pokemon::Repository;
 use std::convert::TryFrom;
 use std::sync::Arc;
 
@@ -13,7 +13,7 @@ pub struct Request {
 pub enum Response {
     Ok(u16),
     BadRequest,
-    Conflict ,
+    Conflict,
     Error,
 }
 
@@ -36,9 +36,9 @@ pub fn execute(repo: Arc<dyn Repository>, req: Request) -> Response {
 mod tests {
     use std::sync::Arc;
 
+    use super::*;
+    use crate::repositories::pokemon::InMemoryRepository;
     use crate::repositories::pokemon::Repository;
-use crate::repositories::pokemon::InMemoryRepository;
-use super::*;
 
     #[test]
     fn it_should_return_a_bad_request_error_when_request_is_invalid() {
@@ -82,7 +82,7 @@ use super::*;
         let types = PokemonTypes::try_from(vec![String::from("Electric")]).unwrap();
         let repo = Arc::new(InMemoryRepository::new());
         repo.insert(number, name, types);
-        let req = Request{
+        let req = Request {
             number: 25,
             name: String::from("Charmander"),
             types: vec![String::from("Fire")],
@@ -98,7 +98,7 @@ use super::*;
 
     #[test]
     fn it_should_return_an_error_when_an_unexpected_error_happens() {
-        let repo = Arc::new(InMemoryRepository::new());
+        let repo = Arc::new(InMemoryRepository::new().with_error());
         let number = 25;
         let req = Request {
             number,
