@@ -1,4 +1,5 @@
 use crate::domain::entities::{Pokemon, PokemonName, PokemonNumber, PokemonTypes};
+use rusqlite::{Connection, OpenFlags};
 use std::sync::Mutex;
 
 pub enum InsertError {
@@ -131,5 +132,49 @@ impl Repository for InMemoryRepository {
 
         lock.remove(index);
         Ok(())
+    }
+}
+
+pub struct SqliteRepository {
+    connection: Mutex<Connection>,
+}
+
+impl SqliteRepository {
+    pub fn try_new(path: &str) -> Result<Self, ()> {
+        let connection = match Connection::open_with_flags(path, OpenFlags::SQLITE_OPEN_READ_WRITE)
+        {
+            Ok(connection) => connection,
+            _ => return Err(()),
+        };
+
+        match connection.execute("pragma foreign_keys = 1", []) {
+            Ok(_) => Ok(Self {
+                connection: Mutex::new(connection),
+            }),
+            _ => Err(()),
+        }
+    }
+}
+
+impl Repository for SqliteRepository {
+    fn insert(
+        &self,
+        number: PokemonNumber,
+        name: PokemonName,
+        types: PokemonTypes,
+    ) -> Result<Pokemon, InsertError> {
+        Err(InsertError::Unknown)
+    }
+
+    fn fetch_all(&self) -> Result<Vec<Pokemon>, FetchAllError> {
+        Err(FetchAllError::Unknown)
+    }
+
+    fn fetch_one(&self, number: PokemonNumber) -> Result<Pokemon, FetchOneError> {
+        Err(FetchOneError::Unknown)
+    }
+
+    fn delete(&self, number: PokemonNumber) -> Result<(), DeleteError> {
+        Err(DeleteError::Unknown)
     }
 }

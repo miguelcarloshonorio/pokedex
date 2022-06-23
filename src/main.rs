@@ -1,4 +1,4 @@
-use repositories::pokemon::InMemoryRepository;
+use repositories::pokemon::{InMemoryRepository, Repository, SqliteRepository};
 use std::sync::Arc;
 
 mod api;
@@ -27,4 +27,15 @@ fn main() {
         0 => api::serve("localhost:8000", repo),
         _ => unreachable!(),
     }
+}
+
+fn build_repo(sqlite_value: Option<&str>) -> Arc<dyn Repository> {
+    if let Some(path) = sqlite_value {
+        match SqliteRepository::try_new(path) {
+            Ok(repo) => return Arc::new(repo),
+            _ => panic!("Error while creating sqlite repo"),
+        }
+    }
+
+    Arc::new(InMemoryRepository::new())
 }
