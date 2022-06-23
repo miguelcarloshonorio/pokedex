@@ -20,6 +20,7 @@ fn main() {
         .version(crate_version!())
         .author(crate_authors!())
         .arg(Arg::with_name("cli").long("cli").help("Runs in CLI mode"))
+        .arg(Arg::with_name("sqlite").long("sqlite").value_name("PATH"))
         .get_matches();
 
     match matches.occurrences_of("cli") {
