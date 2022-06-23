@@ -14,14 +14,14 @@ extern crate clap;
 use clap::{App, Arg};
 
 fn main() {
-    let repo = Arc::new(InMemoryRepository::new());
-
     let matches = App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
         .arg(Arg::with_name("cli").long("cli").help("Runs in CLI mode"))
         .arg(Arg::with_name("sqlite").long("sqlite").value_name("PATH"))
         .get_matches();
+
+    let repo = build_repo(matches.value_of("sqlite"));
 
     match matches.occurrences_of("cli") {
         0 => api::serve("localhost:8000", repo),
