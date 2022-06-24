@@ -1,4 +1,8 @@
-use repositories::pokemon::{AirtableRepository, InMemoryRepository, Repository, SqliteRepository};
+use repositories::{
+    airtable::AirtableRepository,
+    pokemon::{InMemoryRepository, Repository},
+    sqlite::SqliteRepository,
+};
 use std::sync::Arc;
 
 mod api;
